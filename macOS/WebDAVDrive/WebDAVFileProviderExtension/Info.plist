@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>en</string>
+	<key>CFBundleDisplayName</key>
+	<string>WebDAVFileProviderExtension</string>
+	<key>CFBundleIdentifier</key>
+	<string>com.webdav.efp.app.extension</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string>WebDAVFileProviderExtension</string>
+	<key>CFBundlePackageType</key>
+	<string>XPC!</string>
+	<key>CFBundleShortVersionString</key>
+	<string>1.0</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
+	<key>LSMinimumSystemVersion</key>
+	<string>11.0</string>
+	<key>LSUIElement</key>
+	<true/>
+	<key>NSExtension</key>
+	<dict>
+		<key>NSExtensionAttributes</key>
+		<dict/>
+		<key>NSExtensionPointIdentifier</key>
+		<string>com.apple.fileprovider-nonui</string>
+		<key>NSExtensionPrincipalClass</key>
+		<string>VirtualEngine</string>
+		<key>NSExtensionFileProviderSupportsEnumeration</key>
+		<true/>
+		<key>NSExtensionFileProviderActions</key>
+		<array>
+			<dict>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>18d0e0cb-5df7-432c-a06f-297c06b5ec5d</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>Lock</string>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.locked == nil &amp;&amp; !($item.contentType.identifier UTI-CONFORMS-TO &quot;public.folder&quot;) ).@count &gt; 0</string>
+			</dict>
+			<dict>
+				<key>NSExtensionFileProviderActionIdentifier</key>
+				<string>28d0e0cb-5df7-432c-a06f-297c06b5ec4d</string>
+				<key>NSExtensionFileProviderActionName</key>
+				<string>Unlock</string>
+				<key>NSExtensionFileProviderActionActivationRule</key>
+				<string>SUBQUERY ( fileproviderItems, $item, $item.userInfo.locked CONTAINS &quot;1&quot; ).@count &gt; 0</string>
+			</dict>
+		</array>
+		<key>NSExtensionFileProviderDocumentGroup</key>
+		<string>H9B9JEKY3W.group.com.webdav.efp</string>
+		<key>NSFileProviderDecorations</key>
+		<array>
+			<dict>
+				<key>BadgeImageType</key>
+				<string>com.apple.icon-decoration.badge.locked-by-user</string>
+				<key>Category</key>
+				<string>Badge</string>
+				<key>Identifier</key>
+				<string>com.webdav.vfs.app.extension.decorating.locked</string>
+				<key>Label</key>
+				<string>Locked item</string>
+			</dict>
+		</array>
+	</dict>
+	<key>NSPrincipalClass</key>
+	<string>NSApplication</string>
+</dict>
+</plist>

@@ -1,0 +1,97 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0-macos</TargetFramework>
+    <OutputType>Library</OutputType>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>true</ImplicitUsings>
+    <SupportedOSPlatformVersion>11.0</SupportedOSPlatformVersion>
+    <IsAppExtension>True</IsAppExtension>
+    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>False</EnableCodeSigning>
+    <CreatePackage>false</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>false</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <HttpClientHandler></HttpClientHandler>
+    <LinkMode>None</LinkMode>
+    <AOTMode>None</AOTMode>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>AfterBuild</type>
+          <command>bash ${ProjectDir}/sign.sh ${TargetDir}</command>
+        </Command>
+        <Command>
+          <type>AfterBuild</type>
+          <command>codesign --force --sign - -o runtime --entitlements ${ProjectDir}/Entitlements.plist --timestamp --generate-entitlement-der ${TargetDir}/WebDAVFileProviderExtension.appex</command>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <DefineConstants></DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <EnableCodeSigning>False</EnableCodeSigning>
+    <CreatePackage>true</CreatePackage>
+    <EnablePackageSigning>false</EnablePackageSigning>
+    <IncludeMonoRuntime>true</IncludeMonoRuntime>
+    <UseSGen>true</UseSGen>
+    <UseRefCounting>true</UseRefCounting>
+    <CodeSignEntitlements>Entitlements.plist</CodeSignEntitlements>
+    <LinkMode>None</LinkMode>
+    <HttpClientHandler></HttpClientHandler>
+    <AOTMode>None</AOTMode>
+    <LangVersion>10.0</LangVersion>
+    <UseHardenedRuntime>true</UseHardenedRuntime>
+    <CustomCommands>
+      <CustomCommands>
+        <Command>
+          <type>AfterBuild</type>
+          <command>rm -f "${TargetDir}/WebDAVFileProviderExtension.appex/Contents/MonoBundle/createdump"</command>
+        </Command>
+        <Command>
+          <type>AfterBuild</type>
+          <command>cp -rf "${ProjectDir}/embedded.provisionprofile" "${TargetDir}/WebDAVFileProviderExtension.appex/Contents"</command>
+        </Command>
+        <Command>
+          <type>AfterBuild</type>
+          <command>bash ${ProjectDir}/sign_release.sh ${TargetDir}</command>
+        </Command>
+        <Command>
+          <type>AfterBuild</type>
+          <command>codesign --force --sign "Apple Distribution" -o runtime --entitlements ${ProjectDir}/Entitlements.plist --timestamp --generate-entitlement-der ${TargetDir}/WebDAVFileProviderExtension.appex</command>
+        </Command>
+      </CustomCommands>
+    </CustomCommands>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\Common\Core\Common.Core.csproj" />
+    <ProjectReference Include="..\WebDAVCommon\WebDAVCommon.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="ITHitWebDAVClient" Version="7.1.5036" />
+    <PackageReference Include="ITHit.FileSystem.Mac" Version="8.1.26791-Beta2" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="System.Security.Permissions" Version="8.0.0" />
+    <PackageReference Include="System.Threading.AccessControl" Version="8.0.0" />
+  </ItemGroup>
+   <ItemGroup>
+      <Content Include="..\WebDAVMacApp\Resources\appsettings.json" Link="Resources\appsettings.json" />
+  </ItemGroup>
+</Project>
